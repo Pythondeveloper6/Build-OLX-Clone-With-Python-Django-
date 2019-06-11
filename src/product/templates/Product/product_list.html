@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  
+	<!-- Products -->
+	<div class="total-ads main-grid-border">
+		<div class="container">
+			<div class="select-box">
+				<div class="browse-category ads-list">
+					<label>Browse Categories</label>
+					<select class="selectpicker show-tick" data-live-search="true">
+					  <option data-tokens="Mobiles">All</option>
+					  <option data-tokens="Mobiles">Mobiles</option>
+					  <option data-tokens="Electronics & Appliances">Electronics & Appliances</option>
+					  <option data-tokens="Cars">Cars</option>
+					  <option data-tokens="Bikes">Bikes</option>
+					  <option data-tokens="Furniture">Furniture</option>
+					  <option data-tokens="Pets">Pets</option>
+					  <option data-tokens="Books, Sports & Hobbies">Books, Sports & Hobbies</option>
+					  <option data-tokens="Fashion">Fashion</option>
+					  <option data-tokens="Kids">Kids</option>
+					  <option data-tokens="Services">Services</option>
+					  <option data-tokens="Jobs">Jobs</option>
+					  <option data-tokens="Real Estate">Real Estate</option>
+					</select>
+				</div>
+				<div class="search-product ads-list">
+					<label>Search for a specific product</label>
+					<div class="search">
+						<div id="custom-search-input">
+						<div class="input-group">
+							<input type="text" class="form-control input-lg" placeholder="Buscar" />
+							<span class="input-group-btn">
+								<button class="btn btn-info btn-lg" type="button">
+									<i class="glyphicon glyphicon-search"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="all-categories">
+				<h3> Select your category and find the perfect ad</h3>
+				<ul class="all-cat-list">
+                    
+                    {% for category in category_list %}
+					    <li><a href="{% url 'products:product_list_category' category.slug  %}">{{category}} <span class="num-of-ads">({{category.total_products}})</span></a></li>
+                    {% endfor %}
+				</ul>
+			</div>
+			<ol class="breadcrumb" style="margin-bottom: 5px;">
+			  <li><a href="/">Home</a></li>
+              <li class="active"> <a href="{% url 'products:product_list' %}"> All Ads </a></li>
+              {% if category %}
+              <li class="active">{{category}}</li>
+              {% endif %}
+			  
+			</ol>
+			<div class="ads-grid">
+				<div class="side-bar col-md-3">
+					<div class="search-hotel">
+					<h3 class="sear-head">Search</h3>
+					<form method="GET" action="{% url 'products:product_list' %}">
+						<input type="text" placeholder="Product name..." name="q" required="">
+						<input type="submit" value=" ">
+					</form>
+				</div>
+				
+				<div class="featured-ads">
+					<h2 class="sear-head fer">Featured Ads</h2>
+					<div class="featured-ad">
+						<a href="single.html">
+							<div class="featured-ad-left">
+								<img src="images/f1.jpg" title="ad image" alt="" />
+							</div>
+							<div class="featured-ad-right">
+								<h4>Lorem Ipsum is simply dummy text of the printing industry</h4>
+								<p>$ 450</p>
+							</div>
+							<div class="clearfix"></div>
+						</a>
+					</div>
+					<div class="featured-ad">
+						<a href="single.html">
+							<div class="featured-ad-left">
+								<img src="images/f2.jpg" title="ad image" alt="" />
+							</div>
+							<div class="featured-ad-right">
+								<h4>Lorem Ipsum is simply dummy text of the printing industry</h4>
+								<p>$ 380</p>
+							</div>
+							<div class="clearfix"></div>
+						</a>
+					</div>
+					<div class="featured-ad">
+						<a href="single.html">
+							<div class="featured-ad-left">
+								<img src="images/f3.jpg" title="ad image" alt="" />
+							</div>
+							<div class="featured-ad-right">
+								<h4>Lorem Ipsum is simply dummy text of the printing industry</h4>
+								<p>$ 560</p>
+							</div>
+							<div class="clearfix"></div>
+						</a>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				</div>
+				<div class="ads-display col-md-9">
+					<div class="wrapper">					
+					<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+					  <div id="myTabContent" class="tab-content">
+						<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+						   <div>
+												<div id="container">
+
+								<div class="clearfix"></div>
+							<ul class="list">
+                                
+                                {% for product in product_list %}
+                                    <a href="{% url 'products:product_detail' product.slug %}">
+                                        <li>
+                                        <img src="{{product.image.url}}" title="" alt="" />
+                                        <section class="list-left">
+                                        <h5 class="title">{{product.name}}</h5>
+                                        <span class="adprice">${{product.price}}</span>
+                                        <p class="catpath">Mobile Phones » {{product.brand}}</p>
+                                        </section>
+                                        <section class="list-right">
+                                        <span class="date">Date, {{product.created}}</span>
+                                        <span class="cityname">City name</span>
+                                        </section>
+                                        <div class="clearfix"></div>
+                                        </li> 
+                                    </a>
+                                {% endfor %}
+							</ul>
+						</div>
+							</div>
+                        </div>
+                        
+                        {% if product_list.has_other_pages %}
+                          
+                            <ul class="pagination pagination-sm">
+                                {% if product_list.has_previous %}
+                                    <li><a href="?page={{ product_list.previous_page_number }}">Prev</a></li>
+                                {% else %}
+                                    <li class="disabled"></li>
+                                {% endif %}
+                                    
+                                {% for pages in product_list.paginator.page_range %}
+                                    {% if product_list.number == pages %}
+                                        <li><a href="#">{{pages}}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{pages}}">{{pages}}</a></li>
+                                    {% endif %}
+                                    
+                                {% endfor %}
+                                    
+                                
+                                {% if product_list.has_next %}
+                                    <li><a href="?page={{ product_list.next_page_number }}">Next</a></li>
+                                {% else %}
+                                    <li class="disabled"></li>
+                                {% endif %}
+                                   
+                            </ul>
+
+                        {% endif %}
+					  </div>
+					</div>
+				</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>	
+	</div>
+    <!-- // Products -->
+    
+{% endblock body %}
